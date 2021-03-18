@@ -55,21 +55,30 @@ int remove_book(Book book);
 //returns a BookArray structure, where the field "array" is a newly allocated array of books, or null if no book with the 
 //provided title can be found. The length of the array is also recorded in the returned structure, with 0 in case
 //array is the null pointer.
-BookArray find_book_by_title (const char *title);
+BookArray* find_book_by_title (const char *title);
 
 //finds books with the given authors.
 //returns a BookArray structure, where the field "array" is a newly allocated array of books, or null if no book with the 
 //provided title can be found. The length of the array is also recorded in the returned structure, with 0 in case
 //array is the null pointer.
-BookArray find_book_by_author (const char *author);
+BookArray* find_book_by_author (const char *author);
 
 //finds books published in the given year.
 //returns a BookArray structure, where the field "array" is a newly allocated array of books, or null if no book with the 
 //provided title can be found. The length of the array is also recorded in the returned structure, with 0 in case
 //array is the null pointer.
-BookArray find_book_by_year (unsigned int year);
+BookArray* find_book_by_year (unsigned int year);
+
+void display_of_search(BookArray *headArray);
+
+/********************************************/
+/********************************************/
+
 
 void search_for_books();
 void display_all_books();
+void add_a_book ();
+void remove_a_book ();
+
 
 #endif

@@ -1,6 +1,7 @@
-
 #include "interface.h"
 #include "book_management.h"
+#include "user_management.h"
+#include "book_use.h"
 
 
 
@@ -37,6 +38,8 @@ static void start_menu() {
     return;
 }
 
+/********************************************/
+
 static void user_menu() {
     status = 1;
     char *userName;
@@ -72,6 +75,8 @@ static void user_menu() {
     return;
 }
 
+/********************************************/
+
 static void librarian_menu() {
     status = 2;
     int option = 5;
@@ -105,11 +110,25 @@ static void librarian_menu() {
     return;
 }
 
+/********************************************/
+/********************************************/
+
 void run_interface() {
+    status = 0;
+    head = (BookArray*) malloc (sizeof(BookArray));
     FILE *bookFile = fopen("books.txt", "r");
-    FILE *userFile = fopen("books.txt", "r");
-    load_books(bookFile);
-    load_users(userFile);
+    // FILE *userFile = fopen("books.txt", "r");
+ /********************************************/   
+    if (load_books(bookFile) == 1)
+        puts("No such file\n");
+    else
+        puts("Books loaded");
+
+    // if (load_users(userFile) == 1)
+    //     puts("No such file\n");
+    // else
+    //     puts("Users loaded");
+/********************************************/
     do {
         switch (status) {
             case 0:

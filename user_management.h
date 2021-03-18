@@ -1,5 +1,5 @@
-#ifndef BOOK_MANAGEMENT_GUARD__H 
-#define BOOK_MANAGEMENT_GUARD__H
+#ifndef USER_MANAGEMENT_GUARD__H 
+#define USER_MANAGEMENT_GUARD__H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,9 +15,19 @@ typedef struct _User {
         struct _User *next; //Pointer to next user
 }User;
 
+extern User *userHead;
+
+
+int store_users(FILE *file);
+
+int load_users(FILE *file);
+
 
 void register_user();
 void login_user();
+
+
+
 
 
 #endif

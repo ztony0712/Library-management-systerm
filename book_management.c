@@ -7,30 +7,52 @@ static void display_all_books() {
 
     current = head->array;
     while (current->next != NULL) {
-        puts(current);
+        puts(current); // unmodified
         current = current->next;
     }
-    return;
 }
 
-static void search_for_books() {
+/********************************************/
+
+void display_of_search(BookArray *headArray) {
+    if (headArray == NULL) {
+        puts("No such a book!");
+        return;
+    }
+    
+    create_book(current);
+
+    current = headArray->array;
+    while (current->next != NULL) {
+        puts(current); // unmodified
+        current = current->next;
+    }
+}
+
+void search_for_books() {
     char *title, *author, *year;
     int option = 4;
-    puts("(Enter number to chose rule of search\n1. Search by title\n2. Search by author\n3. Search by year\n4. Return to previous\nChoice:");
+    puts("(Enter number to choose rule of search\n1. Search by title\n2. Search by author\n3. Search by year\n4. Return to previous\nChoice:");
     scanf("%d", &option);
     do {
     switch (option) {
             case 1:
+                puts("Enter title: ");
                 gets(title);
-                find_book_by_title(title);
+                
+                display_of_search(find_book_by_title(title));
                 break;
             case 2:
+                puts("Enter author: ");
                 gets(author);
-                find_book_by_author(author);
+                
+                display_of_search(find_book_by_author(author));
                 break;
             case 3:
+                puts("Enter year: ");
                 gets(year);
-                find_book_by_year(year);
+                
+                display_of_search(find_book_by_year(year));
                 break;
             case 4:
                 break;
@@ -41,9 +63,88 @@ static void search_for_books() {
     return;
 }
 
+BookArray* find_book_by_title (const char *title) {
+    create_book(current);
+    create_book(previous);
+    create_book_head(headTitle)
+
+    current = head->array;
+    headTitle->array = NULL;
+
+    while (current->next != NULL) {
+        if (strstr(title, current->title) != NULL) {
+            create_book(book);
+            *book = *current;
+
+            if (headTitle->array == NULL)
+                headTitle->array = book;
+            else
+                previous->next = book;
+            previous = book;
+            book = NULL;
+        }
+        current = current->next;
+    }
+    return headTitle;
+}
+
+
+BookArray* find_book_by_author (const char *authors) {
+    create_book(current);
+    create_book(previous);
+    create_book_head(headAuthor)
+
+    current = head->array;
+    headAuthor->array = NULL;
+
+    while (current->next != NULL) {
+        if (strstr(authors, current->authors) != NULL) {
+            create_book(book);
+            *book = *current;
+
+            if (headAuthor->array == NULL)
+                headAuthor->array = book;
+            else
+                previous->next = book;
+            previous = book;
+            book = NULL;
+        }
+        current = current->next;
+    }
+    return headAuthor;
+}
+
+
+BookArray* find_book_by_year (unsigned int year) {
+    create_book(current);
+    create_book(previous);
+    create_book_head(headYear)
+
+    current = head->array;
+    headYear->array = NULL;
+
+    while (current->next != NULL) {
+        if (year == current->year) {
+            create_book(book);
+            *book = *current;
+
+            if (headYear->array == NULL)
+                headYear->array = book;
+            else
+                previous->next = book;
+            previous = book;
+            book = NULL;
+        }
+        current = current->next;
+    }
+    return headYear;
+}
+
+/********************************************/
+
 int load_books(FILE *file) {
     if (file == NULL) {
-        printf("No such file\n");
+        puts("No such file\n");
         return 1;
     }
 
@@ -54,7 +155,7 @@ int load_books(FILE *file) {
 
 int store_books(FILE *file) {
     if (file == NULL) {
-        printf("No such file\n");
+        puts("No such file\n");
         return 1;
     }
 
@@ -63,7 +164,9 @@ int store_books(FILE *file) {
     return 0;
 }
 
-int add_book(Book book) {
+/********************************************/
+
+static int add_book(Book book) {
     create_book(current);
 
     current = head->array;
@@ -79,7 +182,7 @@ int add_book(Book book) {
 }
 
 
-int remove_book(Book book) {
+static int remove_book(Book book) {
     create_book(previous);
     create_book(current);
 
@@ -97,88 +200,47 @@ int remove_book(Book book) {
     FILE *file = fopen("books.txt", "w");
     store_books(file);
     return 0;
-
 }
 
-BookArray find_book_by_title (const char *title) {
+void add_a_book () {
+    create_book(book);
+
+    puts("Title:");
+    gets(book->title);
+    puts("Author:");
+    gets(book->authors);
+    puts("Year:");
+    gets(book->year);
+    puts("Copies:");
+    gets(book->copies);
+
+    add_book(*book);
+}
+
+void remove_a_book () {
+    int id;
     create_book(current);
-    create_book(previous);
-    create_book(currentTitle);
-    create_book_head(headTitle)
+
+    puts("Enter the id of the book to remove: ");
+    scanf("%d", &id);
 
     current = head->array;
-    currentTitle = headTitle->array;
-
-    while (current->next != NULL) {
-        if (strstr(title, current->title) != NULL) {
-            currentTitle = (Book *) malloc (sizeof(Book));
-            *currentTitle = *current;
-
-            if (headTitle->array == NULL)
-                headTitle->array = currentTitle;
+    while (current != NULL) {
+        if (current->id == id) {
+            if (!remove_book(*current)) {
+                puts("Book removed successfully!");
+                return;
+            }
             else
-                previous->next = currentTitle;
-            current->next = NULL;
-            previous = current;
+                puts("Failed to store");
+            
         }
         current = current->next;
     }
-    return *headTitle;
+    puts("No such a book.");
+    return;
 }
 
-
-BookArray find_book_by_author (const char *authors) {
-    create_book(current);
-    create_book(previous);
-    create_book(currentAuthors);
-    create_book_head(headAuthors)
-
-    current = head->array;
-    currentAuthors = headAuthors->array;
-
-    while (current->next != NULL) {
-        if (strstr(authors, current->authors) != NULL) {
-            currentAuthors = (Book *) malloc (sizeof(Book));
-            *currentAuthors = *current;
-
-            if (headAuthors->array == NULL)
-                headAuthors->array = currentAuthors;
-            else
-                previous->next = currentAuthors;
-            current->next = NULL;
-            previous = current;
-        }
-        current = current->next;
-    }
-    return *headAuthors;
-}
-
-
-BookArray find_book_by_year (unsigned int year) {
-    create_book(current);
-    create_book(previous);
-    create_book(currentYear);
-    create_book_head(headYear)
-
-    current = head->array;
-    currentYear = headYear->array;
-
-    while (current->next != NULL) {
-        if (year == current->year) {
-            currentYear = (Book *) malloc (sizeof(Book));
-            *currentYear = *current;
-
-            if (headYear->array == NULL)
-                headYear->array = currentYear;
-            else
-                previous->next = currentYear;
-            current->next = NULL;
-            previous = current;
-        }
-        current = current->next;
-    }
-    return *headYear;
-}
 
 
 

@@ -1,11 +1,18 @@
 #include "user_management.h"
+#include "interface.h"
 
 
 
-static void register_user () {
+
+
+void register_user () {
+    create_user(userHead);
     create_user(current);
     char *name, *code1, *code2;
-    load_user();
+
+    FILE *userFile = fopen("users.txt", "r");
+    if (load_user(userFile) == 1)
+        puts("No such file\n");
     
     
     puts("Enter user name:");
@@ -39,20 +46,27 @@ static void register_user () {
     new->password = code1;
     
     current->next = new;
-    store_user(userHead);
+
+    // fclose(userFile);
+    // if (store_user(userFile) == 1)
+    //     puts("No such file\n");
 
     puts("Account created successfully!");
-
+    return;
 }
 
 
 
 
 
-static void login_user() {
+void login_user() {
     create_user(current);
     char *name, *password, *code1, *code2;
-    load_user();
+
+    FILE *userFile = fopen("users.txt", "r");
+    if (load_users(userFile) == 1)
+        puts("No such file\n");
+    
 
 
     loop_l:
@@ -61,7 +75,7 @@ static void login_user() {
     puts("Enter password: ");
     gets(password);
 
-    if (name == "librarian" && password == "librarian") {
+    if (strstr(name, "librarian") != NULL && strstr(password, "librarian") != NULL) {
         status = 2;
         return;
     }
@@ -76,7 +90,7 @@ static void login_user() {
             }
             else {
                 puts("Wrong password!\n");
-                goto loop_l
+                goto loop_l;
             }
             
 
@@ -87,5 +101,41 @@ static void login_user() {
         }
         current = current->next;
     }
-
+    return;
 }
+
+/********************************************/
+/********************************************/
+
+int load_users(FILE *file) {
+    create_user(current);
+
+    if (file == NULL)
+        return 1;
+
+    current = userHead;
+    while (current->next != NULL) {
+        fread(current, sizeof(User), 1, file);
+        current = current->next;
+    }
+    return 0; 
+}
+
+int store_users(FILE *file) {
+    create_user(current);
+
+    if (file == NULL)
+        return 1;
+
+    current = userHead;
+    while (current->next != NULL) {
+        fwrite(current, sizeof(User), 1, file);
+        current = current->next;
+    }
+    return 0;
+}
+
+
+
+
+

@@ -5,13 +5,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 
-int status = 0;
+extern int status;
 
 
-void run_interface();
+void start_interface();
 
 
 #endif
