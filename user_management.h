@@ -15,11 +15,10 @@ typedef struct _User {
         struct _User *next; //Pointer to next user
 }User;
 
-extern User *userHead;
+extern int status;
 
 
 int store_users(FILE *file);
-
 int load_users(FILE *file);
 
 

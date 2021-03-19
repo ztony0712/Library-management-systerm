@@ -2,23 +2,22 @@
 #include "interface.h"
 
 
-
-
-
 void register_user () {
     create_user(userHead);
     create_user(current);
     char *name, *code1, *code2;
 
-    FILE *userFile = fopen("users.txt", "r");
-    if (load_user(userFile) == 1)
+    FILE *userFile = fopen("users.txt", "wt+");
+    if (load_users(userFile) == 1) {
         puts("No such file\n");
+        return;
+    }
     
     
     puts("Enter user name:");
 
     loop_r:
-    gets(name);
+    name = my_gets();
     current = userHead->next;
     while (current->next != NULL) {
         if (current->name == name) {
@@ -32,9 +31,9 @@ void register_user () {
 
     while (1) {
         puts("Enter password (more than 8 digits):");
-        gets(code1);
+        code1 = my_gets();
         puts("Enter password again (more than 8 digits):");
-        gets(code2);
+        code2 = my_gets();
         if (code1 == code2)
             break;
         puts("The passwords are inconsistent.");
@@ -47,9 +46,12 @@ void register_user () {
     
     current->next = new;
 
-    // fclose(userFile);
-    // if (store_user(userFile) == 1)
-    //     puts("No such file\n");
+    if (store_users(userFile) == 1){
+        puts("No such file\n");
+        return;
+    }
+
+    fclose(userFile);
 
     puts("Account created successfully!");
     return;
@@ -60,8 +62,9 @@ void register_user () {
 
 
 void login_user() {
+    create_user(userHead);
     create_user(current);
-    char *name, *password, *code1, *code2;
+    char *password, *name;
 
     FILE *userFile = fopen("users.txt", "r");
     if (load_users(userFile) == 1)
@@ -71,9 +74,9 @@ void login_user() {
 
     loop_l:
     puts("Enter user name: ");
-    gets(name);
+    name = my_gets();
     puts("Enter password: ");
-    gets(password);
+    password = my_gets();
 
     if (strstr(name, "librarian") != NULL && strstr(password, "librarian") != NULL) {
         status = 2;
@@ -108,20 +111,25 @@ void login_user() {
 /********************************************/
 
 int load_users(FILE *file) {
+    create_user(userHead);
     create_user(current);
 
-    if (file == NULL)
+    if (file == NULL) {
+        puts("No user file!");
         return 1;
+    }
 
     current = userHead;
-    while (current->next != NULL) {
+    current->next = (User*) malloc(sizeof(User));
+    while (!feof(file)) {
         fread(current, sizeof(User), 1, file);
         current = current->next;
     }
-    return 0; 
+    return 0;
 }
 
 int store_users(FILE *file) {
+    create_user(userHead);
     create_user(current);
 
     if (file == NULL)

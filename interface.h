@@ -7,10 +7,14 @@
 #include <stdlib.h>
 
 
+
 extern int status;
+char *my_gets();
 
 
-void start_interface();
+
+void start_interface(void);
+
 
 
 #endif

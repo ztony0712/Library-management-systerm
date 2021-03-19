@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+extern BookArray *head;
+
 int borrow_book ();
 
 int return_book ();

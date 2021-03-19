@@ -9,6 +9,8 @@
 #define create_book(p) Book *p = (Book*) malloc (sizeof(Book));
 #define create_book_head(p) BookArray *p = (BookArray*) malloc (sizeof(BookArray));
 
+
+
 /*You can extend the structs (Book and BookArray) defined in this head file;
   However, you may not change the function prototypes. 
   You are also free to add additional head files and data structures as needed. 
@@ -30,8 +32,8 @@ typedef struct _BookArray {
 	 unsigned int length; // number of elements in the (Book*) array 
 }BookArray;
 
-extern BookArray *head;
 
+extern BookArray *head;
 
 
 //saves the database of books in the specified file

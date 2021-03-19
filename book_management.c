@@ -1,8 +1,16 @@
 #include "book_management.h"
+#include "interface.h"
+
+
+// #define init_string(st) char *st = malloc (sizeof(char));
+
+// #define my_puts(st) printf("%s\n", st);
+// #define my_gets(st) scanf("%s", st);
+// #define my_gets_num(num) scanf("%u", &num);
 
 
 
-static void display_all_books() {
+void display_all_books() {
     create_book(current);
 
     current = head->array;
@@ -30,34 +38,38 @@ void display_of_search(BookArray *headArray) {
 }
 
 void search_for_books() {
-    char *title, *author, *year;
+    char *title, *author;
+    unsigned int year;
+
+
     int option = 4;
     puts("(Enter number to choose rule of search\n1. Search by title\n2. Search by author\n3. Search by year\n4. Return to previous\nChoice:");
-    scanf("%d", &option);
+    option = atoi(my_gets());
+
     do {
     switch (option) {
             case 1:
                 puts("Enter title: ");
-                gets(title);
+                title = my_gets();
                 
                 display_of_search(find_book_by_title(title));
                 break;
             case 2:
                 puts("Enter author: ");
-                gets(author);
+                author = my_gets();
                 
                 display_of_search(find_book_by_author(author));
                 break;
             case 3:
                 puts("Enter year: ");
-                gets(year);
+                year = atoi(my_gets());
                 
                 display_of_search(find_book_by_year(year));
                 break;
             case 4:
                 break;
             default:
-                printf("Please enter a valid option\n");
+                puts("Please enter a valid option\n");
         }
     } while (option != 4);
     return;
@@ -143,10 +155,8 @@ BookArray* find_book_by_year (unsigned int year) {
 /********************************************/
 
 int load_books(FILE *file) {
-    if (file == NULL) {
-        puts("No such file\n");
+    if (file == NULL)
         return 1;
-    }
 
     fread(head, sizeof(BookArray), 1, file);
     fread(head->array, sizeof(Book), head->length, file);
@@ -154,10 +164,8 @@ int load_books(FILE *file) {
 }
 
 int store_books(FILE *file) {
-    if (file == NULL) {
-        puts("No such file\n");
+    if (file == NULL)
         return 1;
-    }
 
     fwrite(head->array, sizeof(Book), head->length, file);
     fwrite(head, sizeof(BookArray), 1, file);
@@ -166,13 +174,16 @@ int store_books(FILE *file) {
 
 /********************************************/
 
-static int add_book(Book book) {
+int add_book(Book book) {
     create_book(current);
+    create_book(previous);
 
     current = head->array;
-    while (current->next != NULL)
+    while (current != NULL) {
+        
         current = current->next;
-    current->next = &book;
+    }
+    current = &book;
     book.next = NULL;
     book.id = current->id + 1;
     head->length += 1;
@@ -182,7 +193,7 @@ static int add_book(Book book) {
 }
 
 
-static int remove_book(Book book) {
+int remove_book(Book book) {
     create_book(previous);
     create_book(current);
 
@@ -205,14 +216,14 @@ static int remove_book(Book book) {
 void add_a_book () {
     create_book(book);
 
-    puts("Title:");
-    gets(book->title);
-    puts("Author:");
-    gets(book->authors);
-    puts("Year:");
-    gets(book->year);
-    puts("Copies:");
-    gets(book->copies);
+    puts("Title: ");
+    book->title = my_gets();
+    puts("Author: ");
+    book->authors = my_gets();
+    puts("Year: ");
+    book->year = atoi(my_gets());
+    puts("Copies: ");
+    book->copies = atoi(my_gets());
 
     add_book(*book);
 }
@@ -223,6 +234,7 @@ void remove_a_book () {
 
     puts("Enter the id of the book to remove: ");
     scanf("%d", &id);
+    getchar();
 
     current = head->array;
     while (current != NULL) {

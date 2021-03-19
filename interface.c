@@ -1,17 +1,20 @@
 #include "interface.h"
 #include "book_management.h"
 #include "user_management.h"
-#include "book_use.h"
+// #include "book_use.h"
 
-
+BookArray *head;
+int status;
 
 static void start_menu() {
     status = 0;
     int option = 5;
+    char *result;
     do {
 
-        printf("\nWelcome to Tony's library:\n1. Display all books\n2. Search for books\n3. Login\t4. Register\n5. Quit\n(Enter number to execute corresponding option)\nChoice: ");
-        scanf("%d", &option);
+        puts("\nWelcome to Tony's library:\n1. Display all books\n2. Search for books\n3. Login\t4. Register\n5. Quit\n(Enter number to execute corresponding option)\nChoice: ");
+        option = atoi(my_gets());
+
 
         switch (option) {
             case 1:
@@ -27,12 +30,14 @@ static void start_menu() {
                 register_user();
                 break;
             case 5:
-                printf("Good bye!");
+                puts("Good bye!\n");
                 status = -1;
                 break;
             default:
-                printf("Please enter a valid option\n");
+                puts("Please enter a valid option\n");
         }
+        if (status != 0)
+            break;
 
     } while (option != 5);
     return;
@@ -42,13 +47,13 @@ static void start_menu() {
 
 static void user_menu() {
     status = 1;
-    char *userName;
+    char *userName = NULL;
     int option = 5;
 
     do {
 
         printf("\nLogged as %s :)\n1. Display all books\n2. Search for books\n3. Borrow a book\t4. Return a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ", userName);
-        scanf("%d", &option);
+        option = atoi(my_gets());
 
         switch (option) {
             case 1:
@@ -57,20 +62,21 @@ static void user_menu() {
             case 2:
                 search_for_books();
                 break;
-            case 3:
-                borrow_book();
-                break;
-            case 4:
-                return_book();
-                break;
+            // case 3:
+            //     borrow_book();
+            //     break;
+            // case 4:
+            //     return_book();
+            //     break;
             case 5:
                 status = 0;
-                printf("Logged out!");
+                puts("Logged out!\n");
                 break;
             default:
-                printf("Please enter a valid option\n");
+                puts("Please enter a valid option\n");
         }
-
+        if (status != 1)
+            break;
     } while (option != 5);
     return;
 }
@@ -82,8 +88,8 @@ static void librarian_menu() {
     int option = 5;
     do {
 
-        printf("\nLogged as librarian :)\n1. Display all books\n2. Search for books\n3. Add a book\t4. Remove a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ");
-        scanf("%d", &option);
+        puts("\nLogged as librarian :)\n1. Display all books\n2. Search for books\n3. Add a book\t4. Remove a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ");
+        option = atoi(my_gets());
 
         switch (option) {
             case 1:
@@ -100,12 +106,13 @@ static void librarian_menu() {
                 break;
             case 5:
                 status = 0;
-                printf("Logged out");
+                puts("Logged out\n");
                 break;
             default:
-                printf("Please enter a valid option\n");
+                puts("Please enter a valid option\n");
         }
-
+        if (status != 2)
+            break;
     } while (option != 5);
     return;
 }
@@ -113,21 +120,23 @@ static void librarian_menu() {
 /********************************************/
 /********************************************/
 
-void run_interface() {
+void start_interface() {
     status = 0;
     head = (BookArray*) malloc (sizeof(BookArray));
-    FILE *bookFile = fopen("books.txt", "r");
+
+    
     // FILE *userFile = fopen("books.txt", "r");
  /********************************************/   
+    FILE *bookFile = fopen("books.txt", "rt");
     if (load_books(bookFile) == 1)
         puts("No such file\n");
     else
-        puts("Books loaded");
+        puts("Books loaded\n");
 
     // if (load_users(userFile) == 1)
-    //     puts("No such file\n");
+    //     my_puts("No such file\n");
     // else
-    //     puts("Users loaded");
+    //     my_puts("Users loaded");
 /********************************************/
     do {
         switch (status) {
@@ -144,9 +153,38 @@ void run_interface() {
                 break;
         }
     } while (status != -1);
+    fclose(bookFile);
 
     return;
 }
 
+char* my_gets() {
+   char * line = malloc(2), * line_head = line;
+   char ch;
 
+   while(1) {
+     ch = fgetc(stdin);
+     line_head = realloc (line_head, 1);
+     if((*line++ = ch) == '\n')
+         break;
+   }
+   return line_head;
+}
+
+// char* my_gets(char *string) {
+    
+//     char *result, *found;
+//     string = (char*) malloc (sizeof(char));
+
+//     result = fgets(string, 30, stdin);
+//     if (result) {
+//         found = strchr(string, '\n');
+//         if (found)
+//             *found = '\0';
+//         else
+//             while(getchar() != '\n')
+//                 continue;
+//     }
+//     return result;
+// }
 
