@@ -1,30 +1,30 @@
 #include "user_management.h"
 #include "interface.h"
 
+extern int status;
+extern User *userHead;
 
 void register_user () {
-    create_user(userHead);
-    create_user(current);
+    User *current = userHead;
     char *name, *code1, *code2;
 
-    FILE *userFile = fopen("users.txt", "wt+");
-    if (load_users(userFile) == 1) {
-        puts("No such file\n");
-        return;
-    }
+    FILE *userFile = fopen("users.bin", "wb+");
+    // if (load_users(userFile) == 1) {
+    //     puts("No such file\n");
+    //     return;
+    // }
     
     
     puts("Enter user name:");
 
     loop_r:
     name = my_gets();
-    current = userHead->next;
-    while (current->next != NULL) {
+    current = userHead;
+    for (; current != NULL; current = current->next) {
         if (current->name == name) {
             puts("This name is in use. Try another name.\n");
             goto loop_r;
         }
-        current = current->next;
     }
 
     
@@ -34,7 +34,7 @@ void register_user () {
         code1 = my_gets();
         puts("Enter password again (more than 8 digits):");
         code2 = my_gets();
-        if (code1 == code2)
+        if (strcmp(code1, code2) == 0)
             break;
         puts("The passwords are inconsistent.");
     }
@@ -44,7 +44,7 @@ void register_user () {
     new->name = name;
     new->password = code1;
     
-    current->next = new;
+    current = new;
 
     if (store_users(userFile) == 1){
         puts("No such file\n");
@@ -66,6 +66,7 @@ void login_user() {
     create_user(current);
     char *password, *name;
 
+
     FILE *userFile = fopen("users.txt", "r");
     if (load_users(userFile) == 1)
         puts("No such file\n");
@@ -78,12 +79,12 @@ void login_user() {
     puts("Enter password: ");
     password = my_gets();
 
-    if (strstr(name, "librarian") != NULL && strstr(password, "librarian") != NULL) {
+    if (strcmp(name, "librarian") == 0 && strcmp(password, "librarian") == 0) {
         status = 2;
         return;
     }
 
-    current = userHead->next;
+    current = userHead;
     while (1) {
         if (current->name == name) {
             if (current->password == password) {
@@ -111,36 +112,39 @@ void login_user() {
 /********************************************/
 
 int load_users(FILE *file) {
-    create_user(userHead);
-    create_user(current);
+    User *current;
+    int result = 1;
 
-    if (file == NULL) {
+    if (file == NULL)
         puts("No user file!");
-        return 1;
+    else {
+        current = userHead;
+        current->next = (User*) malloc(sizeof(User));
+        while (!feof(file)) {
+            fread(current, sizeof(User), 1, file);
+            current = current->next;
+        }
+        current = NULL;
+        result = 0;
     }
-
-    current = userHead;
-    current->next = (User*) malloc(sizeof(User));
-    while (!feof(file)) {
-        fread(current, sizeof(User), 1, file);
-        current = current->next;
-    }
-    return 0;
+    
+    return result;
 }
 
 int store_users(FILE *file) {
-    create_user(userHead);
-    create_user(current);
+    User *current;
+    int result = 1;
 
     if (file == NULL)
-        return 1;
+        puts("No user file!");
 
-    current = userHead;
-    while (current->next != NULL) {
-        fwrite(current, sizeof(User), 1, file);
-        current = current->next;
+    else {
+        current = userHead;
+        for (; current != NULL; current = current->next)
+            fwrite(current, sizeof(User), 1, file);
+        result = 0;
     }
-    return 0;
+    return result;
 }
 
 

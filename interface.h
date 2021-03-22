@@ -8,7 +8,7 @@
 
 
 
-extern int status;
+
 char *my_gets();
 
 

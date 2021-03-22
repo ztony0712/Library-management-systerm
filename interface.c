@@ -3,13 +3,14 @@
 #include "user_management.h"
 // #include "book_use.h"
 
-BookArray *head;
-int status;
+extern int status;
+extern BookArray *head;
+FILE *bookFile;
+
 
 static void start_menu() {
     status = 0;
     int option = 5;
-    char *result;
     do {
 
         puts("\nWelcome to Tony's library:\n1. Display all books\n2. Search for books\n3. Login\t4. Register\n5. Quit\n(Enter number to execute corresponding option)\nChoice: ");
@@ -107,6 +108,8 @@ static void librarian_menu() {
             case 5:
                 status = 0;
                 puts("Logged out\n");
+                puts("(Press enter to continue.)");
+                my_gets();
                 break;
             default:
                 puts("Please enter a valid option\n");
@@ -123,11 +126,13 @@ static void librarian_menu() {
 void start_interface() {
     status = 0;
     head = (BookArray*) malloc (sizeof(BookArray));
+    head->array = NULL;
+    head->length = 0;
 
     
-    // FILE *userFile = fopen("books.txt", "r");
+    // FILE *userFile = fopen("books.bin", "r");
  /********************************************/   
-    FILE *bookFile = fopen("books.txt", "rt");
+    bookFile = fopen("books.txt", "r");
     if (load_books(bookFile) == 1)
         puts("No such file\n");
     else
@@ -159,7 +164,7 @@ void start_interface() {
 }
 
 char* my_gets() {
-   char * line = malloc(2), * line_head = line;
+   char * line = malloc(2), * line_head = line, *found;
    char ch;
 
    while(1) {
@@ -167,7 +172,13 @@ char* my_gets() {
      line_head = realloc (line_head, 1);
      if((*line++ = ch) == '\n')
          break;
-   }
+    }
+
+    found = strchr(line_head, '\n');
+    if (found)
+        *found = '\0';
+    // fflush(stdin);
+
    return line_head;
 }
 

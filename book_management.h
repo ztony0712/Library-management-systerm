@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define create_book(p) Book *p = (Book*) malloc (sizeof(Book));
-#define create_book_head(p) BookArray *p = (BookArray*) malloc (sizeof(BookArray));
+#define create_book(p) Book *p = (Book*) malloc (sizeof(Book));memset(p, 0, sizeof(Book));
+#define create_book_head(p) BookArray *p = (BookArray*) malloc (sizeof(BookArray));memset(p, 0, sizeof(BookArray));
 
 
 
@@ -33,7 +33,7 @@ typedef struct _BookArray {
 }BookArray;
 
 
-extern BookArray *head;
+
 
 
 //saves the database of books in the specified file
@@ -47,11 +47,11 @@ int load_books(FILE *file);
 
 //adds a book to the ones available to the library
 //returns 0 if the book could be added, or an error code otherwise
-int add_book(Book book);
+int add_book(Book *book);
 
 //removes a book from the library
 //returns 0 if the book could be successfully removed, or an error code otherwise.
-int remove_book(Book book);
+int remove_book(Book *book);
 
 //finds books with a given title.
 //returns a BookArray structure, where the field "array" is a newly allocated array of books, or null if no book with the 
@@ -77,10 +77,10 @@ void display_of_search(BookArray *headArray);
 /********************************************/
 
 
-void search_for_books();
-void display_all_books();
-void add_a_book ();
-void remove_a_book ();
+void search_for_books (void);
+void display_all_books (void);
+void add_a_book (void);
+void remove_a_book (void);
 
 
 #endif

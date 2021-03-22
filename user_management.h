@@ -6,7 +6,7 @@
 #include <string.h>
 
 
-#define create_user(p) User *p = (User*) malloc (sizeof(User));
+#define create_user(p) User *p = (User*) malloc (sizeof(User));memset(p, 0, sizeof(User));
 
 typedef struct _User {
         unsigned int id; //User ID
@@ -15,7 +15,7 @@ typedef struct _User {
         struct _User *next; //Pointer to next user
 }User;
 
-extern int status;
+
 
 
 int store_users(FILE *file);

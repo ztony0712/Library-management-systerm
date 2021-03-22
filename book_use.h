@@ -3,7 +3,6 @@
 #define BOOK_USE_GUARD__H
 
 #include <stdio.h>
-
 extern BookArray *head;
 
 int borrow_book ();
