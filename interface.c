@@ -1,11 +1,13 @@
 #include "interface.h"
 #include "book_management.h"
 #include "user_management.h"
-// #include "book_use.h"
+#include "book_use.h"
 
 extern int status;
 extern BookArray *head;
-FILE *bookFile;
+extern User *userHead;
+extern User *loggedUser;
+
 
 
 static void start_menu() {
@@ -48,12 +50,11 @@ static void start_menu() {
 
 static void user_menu() {
     status = 1;
-    char *userName = NULL;
     int option = 5;
 
     do {
 
-        printf("\nLogged as %s :)\n1. Display all books\n2. Search for books\n3. Borrow a book\t4. Return a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ", userName);
+        printf("\nLogged as %s :)\n1. Display all books\n2. Search for books\n3. Borrow a book\t4. Return a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ", loggedUser->name);
         option = atoi(my_gets());
 
         switch (option) {
@@ -63,12 +64,12 @@ static void user_menu() {
             case 2:
                 search_for_books();
                 break;
-            // case 3:
-            //     borrow_book();
-            //     break;
-            // case 4:
-            //     return_book();
-            //     break;
+            case 3:
+                borrow_book();
+                break;
+            case 4:
+                return_book();
+                break;
             case 5:
                 status = 0;
                 puts("Logged out!\n");
@@ -124,10 +125,27 @@ static void librarian_menu() {
 /********************************************/
 
 void start_interface() {
+    // open bookfile
+    FILE *bookFile;
+    // init status code
     status = 0;
+    // init book head pointer
     head = (BookArray*) malloc (sizeof(BookArray));
-    head->array = NULL;
-    head->length = 0;
+    memset(head, 0, sizeof(BookArray));
+    // init administrator account
+    userHead = (User*) malloc (sizeof(User));
+    memset(userHead, 0, sizeof(User));
+    strcpy(userHead->name, "librarian");
+    strcpy(userHead->password, "librarian");
+    // init book head pointer and file;
+    // int numUser = 1;
+    // FILE *file = fopen("users.bin", "wb+");
+    // fwrite(&numUser, sizeof(int), 1, file);
+    // fwrite(userHead, sizeof(User), 1, file);
+    // fclose(file);
+    loggedUser = (User*) malloc (sizeof(User));
+    memset(loggedUser, 0, sizeof(User));
+    
 
     
     // FILE *userFile = fopen("books.bin", "r");
@@ -159,6 +177,8 @@ void start_interface() {
         }
     } while (status != -1);
     fclose(bookFile);
+    // free book
+    // free user
 
     return;
 }
@@ -166,6 +186,7 @@ void start_interface() {
 char* my_gets() {
    char * line = malloc(2), * line_head = line, *found;
    char ch;
+   // fflush(stdin);
 
    while(1) {
      ch = fgetc(stdin);
@@ -177,7 +198,7 @@ char* my_gets() {
     found = strchr(line_head, '\n');
     if (found)
         *found = '\0';
-    // fflush(stdin);
+
 
    return line_head;
 }

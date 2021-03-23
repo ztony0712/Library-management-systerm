@@ -3,37 +3,43 @@
 
 extern int status;
 extern User *userHead;
+extern User *loggedUser;
+int numUser = 0;
 
 void register_user () {
     User *current = userHead;
     char *name, *code1, *code2;
 
-    FILE *userFile = fopen("users.bin", "wb+");
-    // if (load_users(userFile) == 1) {
-    //     puts("No such file\n");
-    //     return;
-    // }
+    FILE *userFile = fopen("users.bin", "rb");
+    if (load_users(userFile) == 1) {
+        puts("No such file\n");
+        return;
+    }
     
-    
-    puts("Enter user name:");
 
     loop_r:
-    name = my_gets();
-    current = userHead;
+    do {
+        puts("Enter user name (8-20): ");
+        name = my_gets();
+    } while (strlen(name) < 8 || strlen(name) > 20);
+
     for (; current != NULL; current = current->next) {
-        if (current->name == name) {
+        if (strcmp(name, current->name) == 0 || strcmp(name, "librarian") == 0) {
             puts("This name is in use. Try another name.\n");
             goto loop_r;
         }
     }
 
-    
 
     while (1) {
-        puts("Enter password (more than 8 digits):");
-        code1 = my_gets();
-        puts("Enter password again (more than 8 digits):");
-        code2 = my_gets();
+        do {
+            puts("Enter password (8-20): ");
+            code1 = my_gets();
+        } while (strlen(code1) < 8 || strlen(code1) > 20);
+        do {
+            puts("Enter password again (8-20): ");
+            code2 = my_gets();
+        } while (strlen(code2) < 8 || strlen(code2) > 20);
         if (strcmp(code1, code2) == 0)
             break;
         puts("The passwords are inconsistent.");
@@ -41,17 +47,22 @@ void register_user () {
 
 
     create_user(new);
-    new->name = name;
-    new->password = code1;
+    strcpy(new->name, name);
+    strcpy(new->password, code1);
     
-    current = new;
+    for (current = userHead; current->next != NULL; current = current->next);
+    current->next = new;
+    numUser += 1;
 
-    if (store_users(userFile) == 1){
+    userFile = fopen("users.bin", "wb");
+    if (store_users(userFile) == 1) {
         puts("No such file\n");
         return;
     }
 
-    fclose(userFile);
+
+    new = NULL;
+    current = NULL;
 
     puts("Account created successfully!");
     return;
@@ -62,72 +73,86 @@ void register_user () {
 
 
 void login_user() {
-    create_user(userHead);
-    create_user(current);
+
+    User *current;
     char *password, *name;
 
 
-    FILE *userFile = fopen("users.txt", "r");
+    FILE *userFile = fopen("users.bin", "rb");
     if (load_users(userFile) == 1)
-        puts("No such file\n");
+        puts("No user file.\nYou can only log in as librarian.");
+    fclose(userFile);
     
 
 
     loop_l:
-    puts("Enter user name: ");
-    name = my_gets();
-    puts("Enter password: ");
-    password = my_gets();
+    
+    do {
+        puts("Enter user name (8-20): ");
+        name = my_gets();
+    } while (strlen(name) < 8 || strlen(name) > 20);
+    
+    do {
+        puts("Enter password (8-20): ");
+        password = my_gets();
+    } while (strlen(password) < 8 || strlen(password) > 20);
 
-    if (strcmp(name, "librarian") == 0 && strcmp(password, "librarian") == 0) {
+    if (strcmp(name, "librarian") == 0) {
         status = 2;
         return;
     }
 
     current = userHead;
-    while (1) {
-        if (current->name == name) {
-            if (current->password == password) {
-                puts("Account logged successfully!\n");
+    for (; current != NULL; current = current->next) {
+        
+        if (!strcmp(name, current->name)) {
+            if (!strcmp(password, current->password)) {
+                strcpy(loggedUser->name, name);
+                puts("Account logged successfully!");
                 status = 1;
                 return;
             }
             else {
-                puts("Wrong password!\n");
+                puts("Wrong password!");
                 goto loop_l;
             }
-            
-
-            
-        } else if (current->next != NULL) {
-            puts("Account not exist!\n");
-            goto loop_l;
         }
-        current = current->next;
     }
-    return;
+    puts("Account not exist!");
+    goto loop_l;
 }
 
 /********************************************/
 /********************************************/
 
 int load_users(FILE *file) {
-    User *current;
+    User *previous;
+    userHead = NULL;
     int result = 1;
+    
 
     if (file == NULL)
-        puts("No user file!");
+        result = 1;
     else {
-        current = userHead;
-        current->next = (User*) malloc(sizeof(User));
-        while (!feof(file)) {
+        rewind(file);
+        fread(&numUser, sizeof(int), 1, file);
+        previous = userHead;
+        for (int i = 0; i < numUser; ++i) {
+
+            create_user(current);
             fread(current, sizeof(User), 1, file);
-            current = current->next;
+            if (userHead == NULL)
+                previous = userHead = current;
+            else
+                previous->next = current;
+            
+            previous = current;
+            
         }
-        current = NULL;
+
         result = 0;
     }
-    
+    fclose(file);
     return result;
 }
 
@@ -139,11 +164,14 @@ int store_users(FILE *file) {
         puts("No user file!");
 
     else {
+        rewind(file);
+        fwrite(&numUser, sizeof(int), 1, file);
         current = userHead;
         for (; current != NULL; current = current->next)
             fwrite(current, sizeof(User), 1, file);
         result = 0;
     }
+    fclose(file);
     return result;
 }
 

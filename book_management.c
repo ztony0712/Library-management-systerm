@@ -80,7 +80,7 @@ void search_for_books() {
 
 BookArray* find_book_by_title (const char *title) {
     Book *current = head->array;
-    Book *currentTitle;
+    Book *currentTitle = NULL;
     create_book_head(headTitle);
 
 
@@ -107,7 +107,7 @@ BookArray* find_book_by_title (const char *title) {
 
 BookArray* find_book_by_author (const char *authors) {
     Book *current = head->array;
-    Book *currentAuthor;
+    Book *currentAuthor = NULL;
     create_book_head(headAuthor);
 
 
@@ -134,7 +134,7 @@ BookArray* find_book_by_author (const char *authors) {
 
 BookArray* find_book_by_year (unsigned int year) {
     Book *current = head->array;
-    Book *currentYear;
+    Book *currentYear = NULL;
     create_book_head(headYear);
 
 
@@ -161,7 +161,7 @@ BookArray* find_book_by_year (unsigned int year) {
 /********************************************/
 
 int load_books(FILE *file) {
-    Book *previous;
+    Book *previous = NULL;
     if (file == NULL) 
         return 1;   
 
@@ -233,7 +233,7 @@ int add_book(Book *book) {
 
 
 int remove_book(Book *book) {
-    Book *current = head->array, *previous = head->array;
+    Book *current = head->array, *previous = head->array, *idChanger;
 
     if (head->array == NULL) {
         puts("No books in library!");
@@ -248,7 +248,11 @@ int remove_book(Book *book) {
                 head->array = current->next;
             else
                 previous->next = current->next;
+            idChanger = current->next;
+            for (; idChanger != NULL; current = current->next)
+                idChanger->id -= 1;
             free(current);
+            idChanger = NULL;
             break;
         }
         previous = current;

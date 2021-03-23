@@ -9,9 +9,9 @@
 #define create_user(p) User *p = (User*) malloc (sizeof(User));memset(p, 0, sizeof(User));
 
 typedef struct _User {
-        unsigned int id; //User ID
-        char *name; //User name
-        char *password; //User password
+        char name[21]; //User name
+        char password[21]; //User password
+        struct _Book *bookList; //Book list of users
         struct _User *next; //Pointer to next user
 }User;
 
@@ -22,11 +22,8 @@ int store_users(FILE *file);
 int load_users(FILE *file);
 
 
-void register_user();
-void login_user();
-
-
-
+void register_user(void);
+void login_user(void);
 
 
 #endif

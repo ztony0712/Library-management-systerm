@@ -4,6 +4,7 @@
 
 const BookArray *head;
 const User *userHead;
+User *loggedUser;
 int status;
 
 int main()
