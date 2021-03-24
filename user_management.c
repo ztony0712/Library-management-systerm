@@ -1,3 +1,5 @@
+#include "book_management.h"
+#include "book_use.h"
 #include "user_management.h"
 #include "interface.h"
 
@@ -49,9 +51,11 @@ void register_user () {
     create_user(new);
     strcpy(new->name, name);
     strcpy(new->password, code1);
+
     
     for (current = userHead; current->next != NULL; current = current->next);
     current->next = new;
+    memset(current->idContainer, 0, 5);
     numUser += 1;
 
     userFile = fopen("users.bin", "wb");
@@ -107,7 +111,7 @@ void login_user() {
         
         if (!strcmp(name, current->name)) {
             if (!strcmp(password, current->password)) {
-                strcpy(loggedUser->name, name);
+                loggedUser = current;
                 puts("Account logged successfully!");
                 status = 1;
                 return;

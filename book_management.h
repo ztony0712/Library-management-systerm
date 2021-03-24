@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define create_book(p) Book *p = (Book*) malloc (sizeof(Book));memset(p, 0, sizeof(Book));
 #define create_book_head(p) BookArray *p = (BookArray*) malloc (sizeof(BookArray));memset(p, 0, sizeof(BookArray));
+#define puts_books(current) puts("id\ttitle\tauthors\tyear\tcopies\n");for(; current != NULL; current = current->next)printf("%u\t%s\t%s\t%u\t%u\n", current->id, current->title, current->authors, current->year, current->copies);
 
 
 

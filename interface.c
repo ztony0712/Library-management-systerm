@@ -125,26 +125,7 @@ static void librarian_menu() {
 /********************************************/
 
 void start_interface() {
-    // open bookfile
-    FILE *bookFile;
-    // init status code
-    status = 0;
-    // init book head pointer
-    head = (BookArray*) malloc (sizeof(BookArray));
-    memset(head, 0, sizeof(BookArray));
-    // init administrator account
-    userHead = (User*) malloc (sizeof(User));
-    memset(userHead, 0, sizeof(User));
-    strcpy(userHead->name, "librarian");
-    strcpy(userHead->password, "librarian");
-    // init book head pointer and file;
-    // int numUser = 1;
-    // FILE *file = fopen("users.bin", "wb+");
-    // fwrite(&numUser, sizeof(int), 1, file);
-    // fwrite(userHead, sizeof(User), 1, file);
-    // fclose(file);
-    loggedUser = (User*) malloc (sizeof(User));
-    memset(loggedUser, 0, sizeof(User));
+
     
 
     
@@ -186,7 +167,7 @@ void start_interface() {
 char* my_gets() {
    char * line = malloc(2), * line_head = line, *found;
    char ch;
-   // fflush(stdin);
+   fflush(stdin);
 
    while(1) {
      ch = fgetc(stdin);

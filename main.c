@@ -2,13 +2,16 @@
 #include "user_management.h"
 #include "book_management.h"
 
-const BookArray *head;
-const User *userHead;
-User *loggedUser;
 int status;
+BookArray *head;
+User *userHead;
+User *loggedUser;
+
 
 int main()
 {
+
+
 	start_interface();
     
 	return 0;

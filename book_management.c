@@ -1,12 +1,6 @@
 #include "book_management.h"
 #include "interface.h"
 
-
-// #define init_string(st) char *st = malloc (sizeof(char));
-
-// #define my_puts(st) printf("%s\n", st);
-// #define my_gets(st) scanf("%s", st);
-// #define my_gets_num(num) scanf("%u", &num);
 extern BookArray *head;
 
 
@@ -15,11 +9,8 @@ void display_all_books() {
 
     if (current == NULL)
         puts("No books in library!");
-    else {
-        puts("id\ttitle\tauthors\tyear\tcopies\n");
-        for (; current != NULL; current = current->next)
-            printf("%u\t%s\t%s\t%u\t%u\n", current->id, current->title, current->authors, current->year, current->copies);
-    }
+    else
+        puts_books(current);
     puts("Press enter to confirm");
     my_gets();
 }
@@ -32,10 +23,7 @@ void display_of_search(BookArray *headArray) {
     
     else {
         Book *current = headArray->array;
-        puts("id\ttitle\tauthors\tyear\tcopies\n");
-
-        for (; current != NULL; current = current->next)
-            printf("%u\t%s\t%s\t%u\t%u\n", current->id, current->title, current->authors, current->year, current->copies);
+        puts_books(current);
     }
 }
 
@@ -196,12 +184,6 @@ int store_books(FILE *file) {
     if (head->array != NULL)
         for (; current != NULL; current = current->next)
             fprintf(file, "%u\t%s\t\t%s\t%u\t%u\n", current->id, current->title, current->authors, current->year, current->copies);
-
-
-//    if (load_books(file) == 0)
-//        puts("Books reloaded!");
-//    else
-//        puts("Failed to reload books!");
     
     fclose(file);
     return 0;
@@ -215,10 +197,17 @@ int add_book(Book *book) {
     if (head->array != NULL)
         for (; current->next != NULL; current = current->next);
     
-    if (head->array == NULL)
-        book->id = 1;
-    else
-        book->id = current->id + 1;
+    for (Book *idChanger = head->array; idChanger != NULL; idChanger = idChanger->next) {
+        srand((int)time(0));
+        do {
+            book->id = rand() % 1000;
+        } while (idChanger->id == book->id);
+            
+    }
+    // if (head->array == NULL)
+    //     book->id = 1;
+    // else
+    //     book->id = current->id + 1;
     head->length += 1;
     book->next = NULL;
 
