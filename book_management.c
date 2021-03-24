@@ -1,8 +1,8 @@
+#include "global_management.h"
 #include "book_management.h"
-#include "interface.h"
+
 
 extern BookArray *head;
-
 
 void display_all_books() {
     Book *current = head->array;

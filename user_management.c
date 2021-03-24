@@ -1,7 +1,5 @@
-#include "book_management.h"
-#include "book_use.h"
+#include "global_management.h"
 #include "user_management.h"
-#include "interface.h"
 
 extern int status;
 extern User *userHead;
@@ -12,11 +10,11 @@ void register_user () {
     User *current = userHead;
     char *name, *code1, *code2;
 
-    FILE *userFile = fopen("users.bin", "rb");
-    if (load_users(userFile) == 1) {
-        puts("No such file\n");
-        return;
-    }
+    // FILE *userFile = fopen("users.bin", "rb");
+    // if (load_users(userFile) == 1) {
+    //     puts("No such file\n");
+    //     return;
+    // }
     
 
     loop_r:
@@ -58,11 +56,11 @@ void register_user () {
     memset(current->idContainer, 0, 5);
     numUser += 1;
 
-    userFile = fopen("users.bin", "wb");
-    if (store_users(userFile) == 1) {
-        puts("No such file\n");
-        return;
-    }
+    // userFile = fopen("users.bin", "wb");
+    // if (store_users(userFile) == 1) {
+    //     puts("No such file\n");
+    //     return;
+    // }
 
 
     new = NULL;
@@ -82,10 +80,10 @@ void login_user() {
     char *password, *name;
 
 
-    FILE *userFile = fopen("users.bin", "rb");
-    if (load_users(userFile) == 1)
-        puts("No user file.\nYou can only log in as librarian.");
-    fclose(userFile);
+    // FILE *userFile = fopen("users.bin", "rb");
+    // if (load_users(userFile) == 1)
+    //     puts("No user file.\nYou can only log in as librarian.");
+    // fclose(userFile);
     
 
 

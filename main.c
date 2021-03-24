@@ -2,10 +2,7 @@
 #include "user_management.h"
 #include "book_management.h"
 
-int status;
-BookArray *head;
-User *userHead;
-User *loggedUser;
+
 
 
 int main()

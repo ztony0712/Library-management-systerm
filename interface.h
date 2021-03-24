@@ -9,7 +9,6 @@
 
 
 
-char *my_gets(void);
 
 
 

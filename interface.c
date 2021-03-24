@@ -1,11 +1,10 @@
+#include "global_management.h"
 #include "interface.h"
 #include "book_management.h"
 #include "user_management.h"
 #include "book_use.h"
 
 extern int status;
-extern BookArray *head;
-extern User *userHead;
 extern User *loggedUser;
 
 
@@ -127,21 +126,10 @@ static void librarian_menu() {
 void start_interface() {
 
     
-
+    init();
     
-    // FILE *userFile = fopen("books.bin", "r");
- /********************************************/   
-    bookFile = fopen("books.txt", "r");
-    if (load_books(bookFile) == 1)
-        puts("No such file\n");
-    else
-        puts("Books loaded\n");
+/********************************************/   
 
-    // if (load_users(userFile) == 1)
-    //     my_puts("No such file\n");
-    // else
-    //     my_puts("Users loaded");
-/********************************************/
     do {
         switch (status) {
             case 0:
@@ -157,32 +145,16 @@ void start_interface() {
                 break;
         }
     } while (status != -1);
-    fclose(bookFile);
+
+/********************************************/
+    end();
+
     // free book
     // free user
 
     return;
 }
 
-char* my_gets() {
-   char * line = malloc(2), * line_head = line, *found;
-   char ch;
-   fflush(stdin);
-
-   while(1) {
-     ch = fgetc(stdin);
-     line_head = realloc (line_head, 1);
-     if((*line++ = ch) == '\n')
-         break;
-    }
-
-    found = strchr(line_head, '\n');
-    if (found)
-        *found = '\0';
-
-
-   return line_head;
-}
 
 // char* my_gets(char *string) {
     

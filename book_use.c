@@ -1,7 +1,7 @@
-#include "book_use.h"
+#include "global_management.h"
 #include "book_management.h"
 #include "user_management.h"
-#include "interface.h"
+#include "book_use.h"
 
 
 extern BookArray *head;
@@ -101,13 +101,5 @@ void return_book () {
         if (i == 5) {
             puts("Failed. You haven't borrowed this book.");
         }
-
-
-        // for (; current != NULL; current = current->next) {
-
-        // }
     }
-
-
-
 }
