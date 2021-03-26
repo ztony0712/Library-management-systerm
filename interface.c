@@ -13,9 +13,16 @@ static void start_menu() {
     status = 0;
     int option = 5;
     do {
-
-        puts("\nWelcome to Tony's library:\n1. Display all books\n2. Search for books\n3. Login\t4. Register\n5. Quit\n(Enter number to execute corresponding option)\nChoice: ");
+        
+        puts("\nWelcome to Tony's library:\n");
+        puts("1. Display all books\n");
+        puts("2. Search for books\n");
+        puts("3. Login\t4. Register\n");
+        puts("5. Quit\n");
+        puts("(Enter number to execute corresponding option)\n");
+        puts("Choice: ");
         option = atoi(my_gets());
+        puts("**********************************************************\n");
 
 
         switch (option) {
@@ -36,6 +43,7 @@ static void start_menu() {
                 status = -1;
                 break;
             default:
+
                 puts("Please enter a valid option\n");
         }
         if (status != 0)
@@ -53,9 +61,16 @@ static void user_menu() {
 
     do {
 
-        printf("\nLogged as %s :)\n1. Display all books\n2. Search for books\n3. Borrow a book\t4. Return a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ", loggedUser->name);
+        
+        printf("\nLogged as %s :)\n", loggedUser->name);
+        puts("1. Display all books\n");
+        puts("2. Search for books\n");
+        puts("3. Borrow\t4. Return\n");
+        puts("5. Quit\n");
+        puts("(Enter number to execute corresponding option)\n");
+        puts("Choice: ");
         option = atoi(my_gets());
-
+        puts("**********************************************************\n");
         switch (option) {
             case 1:
                 display_all_books();
@@ -88,9 +103,16 @@ static void librarian_menu() {
     status = 2;
     int option = 5;
     do {
-
-        puts("\nLogged as librarian :)\n1. Display all books\n2. Search for books\n3. Add a book\t4. Remove a book\n5. Logout\n(Enter number to execute corresponding option)\nChoice: ");
+        puts("\nLogged as librarian :)\n");
+        puts("1. Display all books\n");
+        puts("2. Search for books\n");
+        puts("3. Add\t4. Remove\n");
+        puts("5. Quit\n");
+        puts("(Enter number to execute corresponding option)\n");
+        puts("Choice: ");
         option = atoi(my_gets());
+        puts("**********************************************************\n");
+
 
         switch (option) {
             case 1:
@@ -107,9 +129,10 @@ static void librarian_menu() {
                 break;
             case 5:
                 status = 0;
-                puts("Logged out\n");
-                puts("(Press enter to continue.)");
+                puts("Logged out!\n");
+                puts("(Press enter to confirm)");
                 my_gets();
+                puts("**********************************************************\n");
                 break;
             default:
                 puts("Please enter a valid option\n");
@@ -149,27 +172,10 @@ void start_interface() {
 /********************************************/
     end();
 
-    // free book
-    // free user
 
     return;
 }
 
 
-// char* my_gets(char *string) {
-    
-//     char *result, *found;
-//     string = (char*) malloc (sizeof(char));
 
-//     result = fgets(string, 30, stdin);
-//     if (result) {
-//         found = strchr(string, '\n');
-//         if (found)
-//             *found = '\0';
-//         else
-//             while(getchar() != '\n')
-//                 continue;
-//     }
-//     return result;
-// }
 

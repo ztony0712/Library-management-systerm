@@ -8,10 +8,6 @@
 
 
 
-
-
-
-
 void start_interface(void);
 
 
