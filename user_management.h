@@ -11,7 +11,7 @@
 typedef struct _User {
         char name[21]; //User name
         char password[21]; //User password
-        unsigned int idContainer[5];
+        unsigned int idContainer[5]; // borrowed ID
         struct _User *next; //Pointer to next user
 }User;
 

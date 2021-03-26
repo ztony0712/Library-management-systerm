@@ -66,7 +66,11 @@ void register_user () {
     new = NULL;
     current = NULL;
 
-    puts("Account created successfully!");
+    puts("Account created successfully!\n");
+    puts("(Press enter to confirm)");
+    getchar();
+    puts("**********************************************************");
+
     return;
 }
 
@@ -99,7 +103,7 @@ void login_user() {
         password = my_gets();
     } while (strlen(password) < 8 || strlen(password) > 20);
 
-    if (strcmp(name, "librarian") == 0) {
+    if (strcmp(name, "librarian") == 0 && strcmp(password, "librarian") == 0) {
         status = 2;
         return;
     }
@@ -110,17 +114,17 @@ void login_user() {
         if (!strcmp(name, current->name)) {
             if (!strcmp(password, current->password)) {
                 loggedUser = current;
-                puts("Account logged successfully!");
+                puts("Account logged successfully!\n");
                 status = 1;
                 return;
             }
             else {
-                puts("Wrong password!");
+                puts("Wrong password!\n");
                 goto loop_l;
             }
         }
     }
-    puts("Account not exist!");
+    puts("Account not exist!\n");
     goto loop_l;
 }
 
@@ -151,7 +155,7 @@ int load_users(FILE *file) {
             previous = current;
             
         }
-
+        previous = NULL;
         result = 0;
     }
     fclose(file);
