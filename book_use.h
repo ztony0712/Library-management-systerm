@@ -4,9 +4,10 @@
 
 #include <stdio.h>
 
-
+// borrow menu
 void borrow_book (void);
 
+// return menu
 void return_book (void);
 
 #endif

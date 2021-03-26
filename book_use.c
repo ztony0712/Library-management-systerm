@@ -17,14 +17,20 @@ void borrow_book () {
         puts("No books in library!");
         return;
     }
-    display_all_books();
+    Book *current = head->array;
+    puts_books(current);
     puts("Enter the id of the book to borrow: ");
-    id = atoi(my_gets());
+    char *answer = my_gets();
+    id = atoi(answer);
+    free(answer);
 
     unsigned int *p = loggedUser->idContainer;
     for (int i = 0; i < 5; ++i) {
         if (id == p[i]) {
-            puts("Failed. You have already borrowed this book.");
+            puts("Failed. You have already borrowed this book.\n");
+            puts("(Press enter to confirm)");
+            getchar();
+            puts("**********************************************************\n");
             return;
         }
     }
@@ -40,19 +46,20 @@ void borrow_book () {
                 }
             }
             if (i == 5) {
-                puts("Failed. You have borrowed 5 books, return some to borrow more books.");
+                puts("Failed. You have borrowed 5 books, return some to borrow more books.\n");
                 return;
             }
         }
     }
     
-    Book *current = head->array;
-    puts_books(current);
-    puts("Success. You have borrowed these books: ");
+    puts("Success. You have borrowed these books =>\n: ");
     for (int i = 0; i < 5; ++i)
         if (p[i] != 0)
             printf("%d ", p[i]);
-    puts("You can check the book you have borrowed by id list.");
+    puts("\nYou can check the book you have borrowed by id list.\n");
+    puts("(Press enter to confirm)");
+    getchar();
+    puts("**********************************************************\n");
 }
 
 void return_book () {
@@ -64,42 +71,55 @@ void return_book () {
     for (; i < 5; ++i)
         if (p[i] != 0)
             break;
-    if (i == 5)
-        puts("You haven't borrowed any books.");
+    if (i == 5) {
+        puts("You haven't borrowed any books.\n");
+        puts("(Press enter to confirm)");
+        getchar();
+        puts("**********************************************************\n");
+
+    }
 
     
     else {
 
         Book *current = head->array;
         puts_books(current);
-        puts("You have borrowed these books: ");
+        puts("You have borrowed these books =>\n: ");
         for (int i = 0; i < 5; ++i)
             if (p[i] != 0)
                 printf("%d ", p[i]);
-        puts("You can check the book you have borrowed by id list.");
+        puts("\nYou can check the book you have borrowed by id list.\n");
 
-        puts("Enter id of the book you want to return.");
-        id = atoi(my_gets());
+        puts("Enter id to return: ");
+        char *answer = my_gets();
+        id = atoi(answer);
+        free(answer);
+
         for (i = 0; i < 5; ++i) {
             if (id == p[i]) {
                 p[i] = 0;
-                puts_books(current);
-                puts("Success. You have borrowed these books: ");
-                for (int i = 0; i < 5; ++i) {
+                puts("Success. You have borrowed these books =>\n: ");
+                for (i = 0; i < 5; ++i)
                     if (p[i] != 0)
                         printf("%d ", p[i]);
-                    if (p[4] == 0)
-                        printf("None");
-                }
+                    
+                if (p[4] == 0)
+                    printf("None");
 
                 printf("\n");
-                puts("You can check the book you have borrowed by id list.");
-                break;
+                puts("You can check the book you have borrowed by id list.\n");
+                puts("(Press enter to confirm)");
+                getchar();
+                puts("**********************************************************\n");
+                return;
             }
         }
 
         if (i == 5) {
-            puts("Failed. You haven't borrowed this book.");
+            puts("Failed. You haven't borrowed this book.\n");
+            puts("(Press enter to confirm)");
+            getchar();
+            puts("**********************************************************\n");
         }
     }
 }
