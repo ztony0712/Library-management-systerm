@@ -4,27 +4,51 @@
 
 extern BookArray *head;
 
+void puts_books(Book *current) {
+    puts("id  \ttitle");
+    for (int i = 0; i < 27; ++i)
+        puts(" ");
+    puts("authors");
+    for (int i = 0; i < 17; ++i)
+        puts(" ");
+    puts("year\tcopies\n");
+
+
+
+    for(; current != NULL; current = current->next)
+        printf("%04u\t%-30s\t%-20s\t%-4u\t%-3u\n", \
+        current->id, current->title, current->authors,\
+        current->year, current->copies);
+    for (int i = 0; i < 80; ++i)
+        puts("-");
+    puts("\n");
+}
+
 void display_all_books() {
     Book *current = head->array;
 
     if (current == NULL)
-        puts("No books in library!");
+        puts("No books in library!\n");
     else
         puts_books(current);
-    puts("Press enter to confirm");
-    my_gets();
+    puts("(Press enter to confirm)");
+    getchar();
+    puts("**********************************************************\n");
 }
 
 /********************************************/
 
 void display_of_search(BookArray *headArray) {
     if (headArray->array == NULL)
-        puts("No such a book!");
+        puts("No such a book!\n");
     
     else {
         Book *current = headArray->array;
         puts_books(current);
     }
+    puts("(Press enter to confirm)");
+    getchar();
+    puts("**********************************************************\n");
 }
 
 void search_for_books() {
@@ -36,8 +60,11 @@ void search_for_books() {
     
 
     do {
-    puts("(Enter number to choose rule of search\n1. Search by title\n2. Search by author\n3. Search by year\n4. Return to previous\nChoice:");
-    option = atoi(my_gets());
+    puts("\n1. Search by title\n2. Search by author\n3. Search by year\n4. Return to previous\n(Enter number to choose rule of search)\nChoice: ");
+    char *answer = my_gets();
+    option = atoi(answer);
+    free(answer);
+    puts("**********************************************************\n");
     switch (option) {
             case 1:
                 puts("Enter title: ");
@@ -76,7 +103,7 @@ BookArray* find_book_by_title (const char *title) {
         puts("No books in library!");
     else {
         for (; current != NULL; current = current->next) {
-            if (strstr(title, current->title) != NULL) {
+            if (strstr(current->title, title) != NULL) {
                 create_book(book);
                 *book = *current;
                 book->next = NULL;
@@ -103,7 +130,7 @@ BookArray* find_book_by_author (const char *authors) {
         puts("No books in library!");
     else {
         for (; current != NULL; current = current->next) {
-            if (strstr(authors, current->authors) != NULL) {
+            if (strstr(current->authors, authors) != NULL) {
                 create_book(book);
                 *book = *current;
                 book->next = NULL;
@@ -169,6 +196,7 @@ int load_books(FILE *file) {
         book->next = NULL;
         previous = book;
     }
+    previous = NULL;
 
     fclose(file);
     return 0;
@@ -183,7 +211,7 @@ int store_books(FILE *file) {
     Book *current = head->array;
     if (head->array != NULL)
         for (; current != NULL; current = current->next)
-            fprintf(file, "%u\t%s\t\t%s\t%u\t%u\n", current->id, current->title, current->authors, current->year, current->copies);
+            fprintf(file, "%04u\t%-30s\t%-20s\t%-4u\t%-2u\n", current->id, current->title, current->authors, current->year, current->copies);
     
     fclose(file);
     return 0;
@@ -200,7 +228,7 @@ int add_book(Book *book) {
     for (Book *idChanger = head->array; idChanger != NULL; idChanger = idChanger->next) {
         srand((int)time(0));
         do {
-            book->id = rand() % 1000;
+            book->id = rand() % 1000 + 1;
         } while (idChanger->id == book->id);
             
     }
@@ -215,8 +243,8 @@ int add_book(Book *book) {
         head->array = book;
     else
         current->next = book;
-    FILE *file = fopen("books.txt", "wt+");
-    store_books(file);
+    // FILE *file = fopen("books.txt", "wt+");
+    // store_books(file);
     return 0;
 }
 
@@ -248,8 +276,8 @@ int remove_book(Book *book) {
     }
 
     head->length -= 1;
-    FILE *file = fopen("books.txt", "w");
-    store_books(file);
+    // FILE *file = fopen("books.txt", "w");
+    // store_books(file);
     return 0;
 }
 
@@ -267,12 +295,14 @@ void add_a_book () {
     book->copies = atoi(my_gets());
 
     if (add_book(book) == 0)
-        puts("Book added successfully!");
+        puts("Book added successfully!\n");
     else
         puts("Book added failed!");
     book = NULL;
-    puts("Enter any key to continue.");
-    my_gets();
+    puts("(Press enter to confirm)");
+    getchar();
+    puts("**********************************************************\n");
+
 
     
 }
@@ -281,47 +311,24 @@ void add_a_book () {
 void remove_a_book () {
     create_book(book);
 
+    Book *current = head->array;
+    puts_books(current);
     puts("Enter the id of the book to remove: ");
     book->id = atoi(my_gets());
 
-    if (!remove_book(book)) {
+    if (!remove_book(book))
         puts("Book removed successfully!");
-        return;
-    }
+
     else
         puts("Failed to store");
+    free(book);
+    puts("(Press enter to confirm)");
+    getchar();
+    puts("**********************************************************\n");
+
 
     return;
 }
-// void remove_a_book () {
-//     int id;
-//     Book *current;
-
-//     puts("Enter the id of the book to remove: ");
-//     id = atoi(my_gets());
-
-//     current = head->array;
-//     if (head->array == NULL) {
-//         puts("No books in library");
-//         return;
-//     }
-//     while (current != NULL) {
-//         if (current->id == id) {
-//             if (!remove_book(current)) {
-//                 puts("Book removed successfully!");
-//                 return;
-//             }
-//             else
-//                 puts("Failed to store");
-            
-//         }
-//         current = current->next;
-//     }
-//     puts("No such a book.");
-//     return;
-// }
-
-
 
 
 
