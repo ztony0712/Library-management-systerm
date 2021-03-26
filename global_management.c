@@ -12,7 +12,7 @@ User *loggedUser;
 
 // A self-designed gets function which could input strings with spaces
 char* my_gets() {
-    char * line = malloc(2), * line_head = line, *found;
+    char *line = malloc(2), *line_head = line, *found;
     char ch;
     // Clear the input cache
     fflush(stdin); 
@@ -21,6 +21,7 @@ char* my_gets() {
     while(1) {
      ch = fgetc(stdin);
      line_head = realloc (line_head, 1);
+     
      if((*line++ = ch) == '\n')
          break;
     }
@@ -29,7 +30,6 @@ char* my_gets() {
     found = strchr(line_head, '\n');
     if (found)
         *found = '\0';
-
 
     return line_head;
 }
@@ -60,18 +60,31 @@ void init() {
     FILE *file;
     file = fopen("books.txt", "r");
     if (load_books(file) == 1)
-        puts("No such file!");
+        puts("No books file!");
     else
         puts("Books loaded.");
+
 
     // open userfile
     file = fopen("users.bin", "rb");
     if (load_users(file) == 1)
-        puts("No user file!\nYou can only log in as librarian!");
+        puts("No users file!\nYou can only log in as librarian!");
     else
         puts("Users loaded.");
-    fclose(file);
     file = NULL;
+
+
+// __        __   _
+// \ \      / /__| | ___ ___  _ __ ___   ___
+//  \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \
+//   \ V  V /  __/ | (_| (_) | | | | | |  __/
+//    \_/\_/ \___|_|\___\___/|_| |_| |_|\___|
+
+    puts("__        __   _");
+    puts("\\ \\      / /__| | ___ ___  _ __ ___   ___");
+    puts(" \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\");
+    puts("  \\ V  V /  __/ | (_| (_) | | | | | |  __/");
+    puts("   \\_/\\_/ \\___|_|\\___\\___/|_| |_| |_|\\___|");
 
 
 }
@@ -79,27 +92,33 @@ void init() {
 void end() {
     // close bookfile
     FILE *file;
-    file = fopen("books.txt", "w");
+    file = fopen("books.txt", "w+");
     if (store_books(file) == 1)
-        puts("No such file!");
+        puts("No books file!");
     else
         puts("Books stored.");
-    fclose(file);
 
     // open userfile
     file = fopen("users.bin", "wr");
     if (store_users(file) == 1)
-        puts("No user file!");
+        puts("No users file!");
     else
         puts("Users stored.");
-    fclose(file);
     file = NULL;
 
     // free book
-
+    Book *currentBook = head->array;
+    for(; currentBook != NULL; currentBook = currentBook->next)
+        free(currentBook);
+    free(head);
+    
     // free user
+    User *currentUser = userHead;
+    for(; currentUser != NULL; currentUser = currentUser->next)
+        free(currentUser);
 
 }
+
 
 
 
