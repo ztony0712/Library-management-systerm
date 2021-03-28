@@ -17,7 +17,6 @@ void register_user () {
     // }
     
 
-    loop_r:
     do {
         puts("Enter user name (8-20): ");
         name = my_gets();
@@ -26,7 +25,7 @@ void register_user () {
     for (; current != NULL; current = current->next) {
         if (strcmp(name, current->name) == 0 || strcmp(name, "librarian") == 0) {
             puts("This name is in use. Try another name.\n");
-            goto loop_r;
+            return;
         }
     }
 
@@ -91,7 +90,6 @@ void login_user() {
     
 
 
-    loop_l:
     
     do {
         puts("Enter user name (8-20): ");
@@ -120,12 +118,12 @@ void login_user() {
             }
             else {
                 puts("Wrong password!\n");
-                goto loop_l;
+                return;
             }
         }
     }
     puts("Account not exist!\n");
-    goto loop_l;
+    return;
 }
 
 /********************************************/

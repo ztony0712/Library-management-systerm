@@ -1,7 +1,6 @@
 #include "global_management.h"
 #include "book_management.h"
 
-
 extern BookArray *head;
 
 void puts_books(Book *current) {
@@ -250,35 +249,35 @@ int add_book(Book *book) {
 
 
 int remove_book(Book *book) {
-    Book *current = head->array, *previous = head->array, *idChanger;
+    int result = 1;
+    Book *current = head->array, *previous = head->array;
 
-    if (head->array == NULL) {
-        puts("No books in library!");
-        return 1;
-    }
+    if (head->array == NULL)
+        puts("No books in library!\n");
 
+    else {
+        for (; current != NULL; current = current->next) {        
 
-    for (; current != NULL; current = current->next) {        
-
-        if (current->id == book->id) {
-            if (current == head->array)
-                head->array = current->next;
-            else
-                previous->next = current->next;
-            idChanger = current->next;
-            for (; idChanger != NULL; current = current->next)
-                idChanger->id -= 1;
-            free(current);
-            idChanger = NULL;
-            break;
+            if (current->id == book->id) {
+                if (current == head->array)
+                    head->array = current->next;
+                else
+                    previous->next = current->next;
+                free(current);
+                break;
+            }
+            previous = current;
         }
-        previous = current;
+        if (current != NULL) {
+            head->length -= 1;
+            result = 0;
+        }
     }
 
-    head->length -= 1;
+    
     // FILE *file = fopen("books.txt", "w");
     // store_books(file);
-    return 0;
+    return result;
 }
 
 void add_a_book () {
@@ -297,7 +296,7 @@ void add_a_book () {
     if (add_book(book) == 0)
         puts("Book added successfully!\n");
     else
-        puts("Book added failed!");
+        puts("Book added failed!\n");
     book = NULL;
     puts("(Press enter to confirm)");
     getchar();
@@ -317,10 +316,10 @@ void remove_a_book () {
     book->id = atoi(my_gets());
 
     if (!remove_book(book))
-        puts("Book removed successfully!");
+        puts("Book removed successfully!\n");
 
     else
-        puts("Failed to store");
+        puts("No such a book!\n");
     free(book);
     puts("(Press enter to confirm)");
     getchar();
