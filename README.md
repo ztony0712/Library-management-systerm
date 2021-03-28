@@ -65,4 +65,4 @@ Attention❗️You can use files in 'init' to reset data❗️
 * Find my project in my github: https://github.com/ztony0712/pp-cw1
 * Screenshot
 
-![Screenshot 2021-03-28 at 3.46.03 PM](Screenshot 2021-03-28 at 3.46.03 PM.png)
+![Screenshot](Screenshot.png)
